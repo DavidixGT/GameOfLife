@@ -1,0 +1,26 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float4> Result;
+int _width;
+int _height;
+bool _ShowNextStep;
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    // Calculate the UV coordinates
+    float2 uv = float2(id.x / (float)(_width - 1), id.y / (float)(_height - 1));
+
+    // Sample the source texture
+    //float4 color = tex2D(Result, uv);
+    float r = Result[id.xy].r;
+    float g = Result[id.xy].g;
+    float b = Result[id.xy].b;
+    // Modify the color or perform any other desired computations
+
+    // Write the modified color to the Result texture
+    Result[id.xy] = float4(r, g, b, 1);
+}
